@@ -1,0 +1,1063 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>תוכנית העבודה של The Sky That Never Fell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Hebrew:wght@400;500;600&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --ground: #F1F4F2;
+    --surface: #FBFCFB;
+    --ink: #1C2422;
+    --ink-soft: #56625E;
+    --line: #D5DCD9;
+    --line-faint: #E6EBE9;
+    --row-hover: #F4F7F5;
+    --lapis: #2A4A7F;
+    --lapis-soft: #E1E8F3;
+    --on-lapis: #FBFCFB;
+    --malachite: #2C744B;
+    --malachite-soft: #DBEEE2;
+    --ochre: #9A6A1C;
+    --ochre-soft: #F4E7CD;
+    --stone-soft: #E5EAE7;
+    --danger: #A3392D;
+    --toast-bg: #1C2422;
+    --toast-ink: #F1F4F2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --ground: #111615;
+      --surface: #182020;
+      --ink: #E4EBE8;
+      --ink-soft: #98A6A1;
+      --line: #2B3533;
+      --line-faint: #212A28;
+      --row-hover: #1C2524;
+      --lapis: #93B2E6;
+      --lapis-soft: #1E2A3F;
+      --on-lapis: #111615;
+      --malachite: #7DC89C;
+      --malachite-soft: #193224;
+      --ochre: #DDB064;
+      --ochre-soft: #372C18;
+      --stone-soft: #252E2C;
+      --danger: #E48B7F;
+      --toast-bg: #E4EBE8;
+      --toast-ink: #111615;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --ground: #111615;
+    --surface: #182020;
+    --ink: #E4EBE8;
+    --ink-soft: #98A6A1;
+    --line: #2B3533;
+    --line-faint: #212A28;
+    --row-hover: #1C2524;
+    --lapis: #93B2E6;
+    --lapis-soft: #1E2A3F;
+    --on-lapis: #111615;
+    --malachite: #7DC89C;
+    --malachite-soft: #193224;
+    --ochre: #DDB064;
+    --ochre-soft: #372C18;
+    --stone-soft: #252E2C;
+    --danger: #E48B7F;
+    --toast-bg: #E4EBE8;
+    --toast-ink: #111615;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "IBM Plex Sans Hebrew", "Segoe UI", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  [hidden] { display: none !important; }
+  .app { max-width: 1480px; margin: 0 auto; padding: 26px 28px 64px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  .top {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px 32px;
+    align-items: end;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow {
+    margin: 0 0 2px;
+    font-family: "IBM Plex Mono", Consolas, monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--lapis);
+    direction: ltr;
+    text-align: right;
+  }
+  h1 {
+    margin: 0;
+    font-family: "Frank Ruhl Libre", "David", "Times New Roman", serif;
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+  .status-line { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: 6px; }
+  .sync { margin: 0; font-size: 13px; color: var(--ink-soft); }
+  .sync[data-state="saving"] { color: var(--ochre); }
+  .sync[data-state="error"] { color: var(--danger); }
+  .signout {
+    padding: 3px 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: none;
+    color: var(--ink-soft);
+    font: inherit;
+    font-size: 12.5px;
+    cursor: pointer;
+  }
+  .signout:hover { color: var(--ink); border-color: var(--ink-soft); }
+
+  .people { display: flex; flex-wrap: wrap; gap: 14px 28px; }
+  .person { display: grid; gap: 5px; min-width: 150px; }
+  .person-head { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; }
+  .person-name { font-weight: 600; }
+  .person-count { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .meter { display: flex; height: 6px; border-radius: 3px; overflow: hidden; background: var(--stone-soft); }
+  .meter .done { background: var(--malachite); }
+  .meter .wip { background: var(--ochre); }
+
+  .gate {
+    display: grid;
+    gap: 16px;
+    max-width: 580px;
+    margin: 36px auto 0;
+    padding: 28px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+  }
+  .gate h2 {
+    margin: 0;
+    font-family: "Frank Ruhl Libre", "David", "Times New Roman", serif;
+    font-size: 24px;
+    font-weight: 700;
+    text-wrap: balance;
+  }
+  .gate p { margin: 0; color: var(--ink-soft); max-width: 62ch; }
+  .gate form { display: flex; flex-wrap: wrap; gap: 8px; }
+  .gate input {
+    flex: 1 1 280px;
+    padding: 9px 11px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "IBM Plex Mono", Consolas, monospace;
+    font-size: 13px;
+  }
+  .gate input:focus { outline: none; border-color: var(--lapis); box-shadow: 0 0 0 3px var(--lapis-soft); }
+  .btn {
+    padding: 9px 18px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--lapis);
+    color: var(--on-lapis);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn:disabled { opacity: 0.6; cursor: default; }
+  .gate-error { min-height: 1.45em; color: var(--danger) !important; }
+  .gate details { color: var(--ink-soft); }
+  .gate summary { cursor: pointer; color: var(--ink); font-weight: 500; }
+  .gate ol { display: grid; gap: 6px; margin: 10px 0 0; padding-inline-start: 22px; }
+  .gate code {
+    font-family: "IBM Plex Mono", Consolas, monospace;
+    font-size: 12.5px;
+    direction: ltr;
+    unicode-bidi: isolate;
+    color: var(--ink);
+  }
+
+  .tabs { display: flex; gap: 4px; margin-top: 14px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+  .tabs button {
+    padding: 10px 14px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    background: none;
+    color: var(--ink-soft);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--lapis); }
+  .tabs button:hover { color: var(--ink); }
+
+  .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding: 14px 0; }
+  .search input {
+    width: 230px;
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+  }
+  .chips { display: flex; gap: 4px; flex-wrap: wrap; }
+  .chip {
+    padding: 4px 11px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink-soft);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .chip[aria-pressed="true"] { background: var(--lapis-soft); border-color: transparent; color: var(--lapis); font-weight: 500; }
+  .count { margin-inline-start: auto; color: var(--ink-soft); font-size: 13px; font-variant-numeric: tabular-nums; }
+
+  .table-wrap {
+    overflow: auto;
+    max-height: 74vh;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+  }
+  table.grid { width: 100%; border-collapse: separate; border-spacing: 0; }
+  table.grid[data-sheet="tasks"] { min-width: 1080px; }
+  table.grid[data-sheet="animations"] { min-width: 1240px; }
+  table.grid[data-sheet="info"] { min-width: 760px; }
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 9px 8px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-align: right;
+    white-space: nowrap;
+  }
+  tr.group th {
+    padding: 16px 12px 7px;
+    background: var(--ground);
+    border-bottom: 1px solid var(--line);
+    text-align: right;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .group-line { display: flex; align-items: baseline; gap: 12px; }
+  .group-count { color: var(--ink-soft); font-family: "IBM Plex Mono", Consolas, monospace; font-size: 12px; font-weight: 400; direction: ltr; }
+  td { padding: 3px 5px; border-bottom: 1px solid var(--line-faint); vertical-align: top; }
+  tbody tr.row:hover td, tbody tr.row:focus-within td { background: var(--row-hover); }
+  td.num {
+    width: 38px;
+    padding-top: 10px;
+    text-align: center;
+    color: var(--ink-soft);
+    font-family: "IBM Plex Mono", Consolas, monospace;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cell {
+    display: block;
+    width: 100%;
+    padding: 6px 7px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    line-height: 1.45;
+    resize: none;
+    overflow: hidden;
+  }
+  .cell:hover { border-color: var(--line); }
+  .cell:focus { outline: none; border-color: var(--lapis); background: var(--surface); box-shadow: 0 0 0 3px var(--lapis-soft); }
+  .cell.mono { font-family: "IBM Plex Mono", Consolas, monospace; font-size: 12.5px; direction: ltr; text-align: left; }
+  .w-task { min-width: 300px; }
+  .w-notes { min-width: 320px; }
+  .w-tool { width: 150px; }
+  .w-meshy { min-width: 270px; }
+  .w-who { width: 104px; }
+  .w-status { width: 116px; }
+  .w-act { width: 76px; }
+
+  .pill {
+    appearance: none;
+    -webkit-appearance: none;
+    margin-top: 3px;
+    padding: 4px 12px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .pill.who { background: transparent; border-color: var(--line); color: var(--ink); }
+  .pill.todo { background: var(--stone-soft); color: var(--ink-soft); }
+  .pill.wip { background: var(--ochre-soft); color: var(--ochre); }
+  .pill.done { background: var(--malachite-soft); color: var(--malachite); }
+  .pill option { background: var(--surface); color: var(--ink); }
+
+  button:focus-visible, .pill:focus-visible, .chip:focus-visible, .search input:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--lapis);
+    outline-offset: 2px;
+  }
+  .del {
+    margin-top: 3px;
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background: none;
+    color: var(--ink-soft);
+    font: inherit;
+    font-size: 12.5px;
+    cursor: pointer;
+    opacity: 0;
+    white-space: nowrap;
+  }
+  tr.row:hover .del, tr.row:focus-within .del, .del:focus-visible, .del[data-armed] { opacity: 1; }
+  .del:hover { color: var(--danger); }
+  .del[data-armed] { color: var(--danger); border-color: var(--danger); }
+  tr.add td { padding: 6px 12px 12px; border-bottom: 0; }
+  .add-btn {
+    padding: 5px 12px;
+    border: 1px dashed var(--line);
+    border-radius: 6px;
+    background: none;
+    color: var(--ink-soft);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .add-btn:hover { color: var(--lapis); border-color: var(--lapis); }
+
+  .notice {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+    max-width: 70ch;
+    margin: 0;
+    padding: 24px 28px;
+    border: 1px dashed var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--ink-soft);
+  }
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 16px;
+    border-radius: 6px;
+    background: var(--toast-bg);
+    color: var(--toast-ink);
+    font-size: 13px;
+    max-width: calc(100vw - 40px);
+  }
+
+  @media (max-width: 760px) {
+    .app { padding: 18px 14px 48px; }
+    .top { grid-template-columns: 1fr; }
+    .people { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .person { min-width: 0; }
+    .person-head { flex-direction: column; gap: 0; }
+    .search { flex: 1 1 100%; }
+    .search input { width: 100%; }
+    .gate { margin-top: 20px; padding: 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div>
+      <p class="eyebrow">The Sky That Never Fell</p>
+      <h1>תוכנית העבודה</h1>
+      <div class="status-line">
+        <p class="sync" id="sync" role="status" aria-live="polite"></p>
+        <button class="signout" id="signout" type="button" hidden>יציאה מהמכשיר הזה</button>
+      </div>
+    </div>
+    <div class="people" id="people" aria-label="התקדמות לפי מי"></div>
+  </header>
+
+  <section class="gate" id="gate" hidden aria-labelledby="gate-title">
+    <h2 id="gate-title">פתיחת הטבלה</h2>
+    <p>הטבלה שמורה ב-repo פרטי ב-GitHub. כדי לפתוח אותה במכשיר הזה, מדביקים את המפתח (token) שיצרת. המפתח נשמר רק בדפדפן הזה, ובלעדיו אי אפשר לראות כאן כלום.</p>
+    <form id="gateForm" autocomplete="off">
+      <label class="sr" for="token">המפתח מ-GitHub</label>
+      <input id="token" type="password" dir="ltr" spellcheck="false" autocapitalize="off" placeholder="github_pat_…">
+      <button class="btn" id="gateButton" type="submit">פתיחת הטבלה</button>
+    </form>
+    <p class="gate-error" id="gateError" role="alert"></p>
+    <details>
+      <summary>איך יוצרים מפתח</summary>
+      <ol>
+        <li>נכנסים ל-<code>github.com/settings/personal-access-tokens/new</code></li>
+        <li>ב-Repository access בוחרים <code>Only select repositories</code> ואז <code>sky-plan-data</code></li>
+        <li>ב-Permissions מוסיפים <code>Contents</code> ובוחרים <code>Read and write</code></li>
+        <li>לוחצים <code>Generate token</code>, מעתיקים את המפתח ומדביקים אותו כאן</li>
+      </ol>
+    </details>
+  </section>
+
+  <div id="workspace" hidden>
+    <nav class="tabs" role="tablist" aria-label="גיליונות">
+      <button role="tab" type="button" data-tab="tasks" aria-selected="true">משימות</button>
+      <button role="tab" type="button" data-tab="animations" aria-selected="false">חלוקת אנימציות</button>
+      <button role="tab" type="button" data-tab="info" aria-selected="false">כללים ומידע</button>
+    </nav>
+
+    <div class="toolbar">
+      <label class="search"><span class="sr">חיפוש בטבלה</span><input id="q" type="search" placeholder="חיפוש בטבלה"></label>
+      <div class="chips" id="whoFilter" role="group" aria-label="סינון לפי מי"></div>
+      <div class="chips" id="statusFilter" role="group" aria-label="סינון לפי סטטוס"></div>
+      <span class="count" id="count"></span>
+    </div>
+
+    <main id="view"></main>
+  </div>
+
+  <noscript><p class="notice">הטבלה צריכה JavaScript כדי לעבוד.</p></noscript>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</div>
+
+<script>
+(() => {
+  const OWNER = "shachardorhaim-sketch";
+  const REPO = "sky-plan-data";
+  const FILE = "data.json";
+  const BRANCH = "main";
+  const API = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE}`;
+  const TOKEN_KEY = "skyPlan.token";
+  const TAB_KEY = "skyPlan.tab";
+
+  const WHO = ["שחר", "Claude", "ביחד"];
+  const STATUS = ["לא התחיל", "בתהליך", "בוצע"];
+  const STATUS_CLASS = { "לא התחיל": "todo", "בתהליך": "wip", "בוצע": "done" };
+  const NO_GROUP = "בלי שלב";
+
+  const SHEETS = {
+    tasks: {
+      group: "stage",
+      cols: [
+        { key: "task", label: "משימה", kind: "area", cls: "w-task" },
+        { key: "who", label: "מי", kind: "who", cls: "w-who" },
+        { key: "tool", label: "כלי", kind: "text", cls: "w-tool" },
+        { key: "status", label: "סטטוס", kind: "status", cls: "w-status" },
+        { key: "notes", label: "הערות", kind: "area", cls: "w-notes" },
+      ],
+      blank: { task: "", who: "שחר", tool: "", status: "לא התחיל", notes: "" },
+    },
+    animations: {
+      group: "stage",
+      cols: [
+        { key: "animation", label: "אנימציה", kind: "area", cls: "w-task" },
+        { key: "who", label: "מי", kind: "who", cls: "w-who" },
+        { key: "tool", label: "כלי", kind: "text", cls: "w-tool" },
+        { key: "meshy", label: "שם בספרייה של Meshy", kind: "mono", cls: "w-meshy" },
+        { key: "status", label: "סטטוס", kind: "status", cls: "w-status" },
+        { key: "notes", label: "הערות", kind: "area", cls: "w-notes" },
+      ],
+      blank: { animation: "", who: "שחר", tool: "Meshy", meshy: "", status: "לא התחיל", notes: "" },
+    },
+    info: {
+      group: "section",
+      cols: [
+        { key: "text", label: "כלל, שלב או מקום", kind: "area", cls: "w-task" },
+        { key: "detail", label: "פירוט", kind: "area", cls: "w-notes" },
+      ],
+      blank: { text: "", detail: "" },
+    },
+  };
+
+  const store = {
+    get(key) { try { return localStorage.getItem(key); } catch (e) { return null; } },
+    set(key, value) { try { localStorage.setItem(key, value); } catch (e) { /* private mode: stays for this visit only */ } },
+    remove(key) { try { localStorage.removeItem(key); } catch (e) { /* nothing stored */ } },
+  };
+
+  const savedTab = store.get(TAB_KEY);
+  const state = {
+    tab: SHEETS[savedTab] ? savedTab : "tasks",
+    renderedTab: null,
+    q: "",
+    who: "",
+    status: "",
+    token: null,
+    data: null,
+    sha: null,
+    gen: 0,
+    pending: [],
+    saving: false,
+    lastLoad: 0,
+    renderPending: false,
+    focusId: null,
+  };
+
+  const $ = (id) => document.getElementById(id);
+  const view = $("view");
+  const esc = (v) => String(v ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  let toastTimer = 0;
+  function toast(message) {
+    const el = $("toast");
+    el.textContent = message;
+    el.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { el.hidden = true; }, 5000);
+  }
+
+  function setSync(text, kind = "") {
+    const el = $("sync");
+    el.textContent = text;
+    el.dataset.state = kind;
+  }
+
+  // ---- GitHub ----
+
+  class GitHubError extends Error {
+    constructor(status, detail, rateLimited) {
+      super(detail || "GitHub " + status);
+      this.status = status;
+      this.rateLimited = rateLimited;
+    }
+  }
+
+  async function request(method, body) {
+    let res;
+    try {
+      res = await fetch(method === "GET" ? `${API}?ref=${BRANCH}` : API, {
+        method,
+        cache: "no-store",
+        headers: {
+          Accept: "application/vnd.github+json",
+          Authorization: `Bearer ${state.token}`,
+          ...(body ? { "Content-Type": "application/json" } : {}),
+        },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+    } catch (e) {
+      throw new GitHubError(0, "network", false);
+    }
+    if (!res.ok) {
+      let detail = "";
+      try { detail = (await res.json()).message || ""; } catch (e) { /* no body */ }
+      throw new GitHubError(res.status, detail, res.headers.get("x-ratelimit-remaining") === "0");
+    }
+    return res.json();
+  }
+
+  function decode(base64) {
+    const binary = atob(base64.replace(/\s/g, ""));
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+
+  function encode(text) {
+    const bytes = new TextEncoder().encode(text);
+    let binary = "";
+    for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    return btoa(binary);
+  }
+
+  function errorText(err) {
+    if (!err || err.status === 0) return "אין חיבור ל-GitHub. השינויים יישמרו כשהחיבור יחזור.";
+    if (err.status === 401) return "המפתח לא תקין או שפג תוקפו. יוצרים מפתח חדש ומדביקים אותו.";
+    if (err.rateLimited) return "יותר מדי בקשות ל-GitHub. מחכים כמה דקות ומנסים שוב.";
+    if (err.status === 403) return "למפתח אין הרשאה לטבלה. ביצירת המפתח בוחרים Contents עם Read and write.";
+    if (err.status === 404) return `המפתח לא רואה את ${REPO}. ביצירת המפתח בוחרים את ה-repo הזה תחת Only select repositories.`;
+    return "GitHub לא שמר את השינוי. מנסים שוב בעוד כמה שניות.";
+  }
+  const isAccessError = (err) => !!err && (err.status === 401 || err.status === 404 || (err.status === 403 && !err.rateLimited));
+
+  function applyOp(data, op) {
+    const rows = data[op.sheet] || (data[op.sheet] = []);
+    if (op.type === "set") {
+      const row = rows.find((r) => r.id === op.id);
+      if (row) row[op.field] = op.value;
+    } else if (op.type === "add") {
+      if (!rows.some((r) => r.id === op.row.id)) rows.push({ ...op.row });
+    } else if (op.type === "delete") {
+      const i = rows.findIndex((r) => r.id === op.id);
+      if (i >= 0) rows.splice(i, 1);
+    }
+  }
+
+  async function fetchLatest() {
+    const file = await request("GET");
+    const data = JSON.parse(decode(file.content));
+    for (const op of state.pending) applyOp(data, op);
+    return { data, sha: file.sha };
+  }
+
+  let saveTimer = 0;
+  function queue(op) {
+    applyOp(state.data, op);
+    state.pending.push(op);
+    setSync("שומר…", "saving");
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(flush, 900);
+    scheduleRender();
+  }
+
+  async function flush() {
+    clearTimeout(saveTimer);
+    if (state.saving || !state.pending.length || !state.token) return;
+    state.saving = true;
+    const count = state.pending.length;
+    let failure = null;
+    try {
+      for (let attempt = 0; ; attempt++) {
+        try {
+          const res = await request("PUT", {
+            message: count === 1 ? "עדכון מהאתר" : `עדכון מהאתר: ${count} שינויים`,
+            content: encode(JSON.stringify(state.data, null, 1) + "\n"),
+            sha: state.sha,
+            branch: BRANCH,
+          });
+          state.sha = res.content.sha;
+          state.gen++;
+          state.pending.splice(0, count);
+          break;
+        } catch (err) {
+          // The file changed since it was loaded (another device, or Claude): take the latest and replay these edits on top.
+          if ((err.status === 409 || err.status === 422) && attempt < 3) {
+            const latest = await fetchLatest();
+            state.data = latest.data;
+            state.sha = latest.sha;
+            continue;
+          }
+          throw err;
+        }
+      }
+    } catch (err) {
+      failure = err;
+    } finally {
+      state.saving = false;
+    }
+
+    if (failure) {
+      if (isAccessError(failure)) {
+        lockOut(errorText(failure));
+        return;
+      }
+      setSync("השינויים עוד לא נשמרו", "error");
+      toast(errorText(failure));
+      saveTimer = setTimeout(flush, 8000);
+    } else if (state.pending.length) {
+      saveTimer = setTimeout(flush, 900);
+    } else {
+      setSync("נשמר ב-GitHub");
+    }
+    scheduleRender();
+  }
+
+  async function refresh() {
+    if (!state.token || !state.data || state.saving || state.pending.length || document.visibilityState !== "visible") return;
+    const gen = state.gen;
+    try {
+      const latest = await fetchLatest();
+      if (gen !== state.gen || state.saving || state.pending.length) return;
+      state.lastLoad = Date.now();
+      if (latest.sha === state.sha) return;
+      state.data = latest.data;
+      state.sha = latest.sha;
+      scheduleRender();
+    } catch (err) {
+      if (isAccessError(err)) lockOut(errorText(err));
+    }
+  }
+
+  // ---- Access ----
+
+  function showGate(message = "") {
+    $("gate").hidden = false;
+    $("workspace").hidden = true;
+    $("signout").hidden = true;
+    $("people").innerHTML = "";
+    $("gateError").textContent = message;
+    setSync("");
+  }
+
+  function showWorkspace() {
+    $("gate").hidden = true;
+    $("workspace").hidden = false;
+    $("signout").hidden = false;
+  }
+
+  function forgetToken() {
+    store.remove(TOKEN_KEY);
+    state.token = null;
+    state.data = null;
+    state.sha = null;
+    state.pending = [];
+    clearTimeout(saveTimer);
+  }
+
+  function lockOut(message) {
+    forgetToken();
+    showGate(message);
+  }
+
+  async function open() {
+    renderFilters();
+    state.token = store.get(TOKEN_KEY);
+    if (!state.token) {
+      showGate();
+      return;
+    }
+    showWorkspace();
+    setSync("טוען מ-GitHub…", "saving");
+    view.innerHTML = `<p class="notice">טוען את הטבלה…</p>`;
+    try {
+      const latest = await fetchLatest();
+      state.data = latest.data;
+      state.sha = latest.sha;
+      state.lastLoad = Date.now();
+      setSync("מחובר ל-GitHub");
+      render();
+    } catch (err) {
+      if (isAccessError(err)) {
+        lockOut(errorText(err));
+        return;
+      }
+      setSync("אין חיבור ל-GitHub", "error");
+      view.innerHTML = `<div class="notice"><span>${esc(errorText(err))}</span><button class="btn" type="button" data-retry>לנסות שוב</button></div>`;
+    }
+  }
+
+  $("gateForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const input = $("token");
+    const button = $("gateButton");
+    const token = input.value.trim();
+    if (!token) {
+      $("gateError").textContent = "מדביקים כאן את המפתח שיצרת ב-GitHub.";
+      input.focus();
+      return;
+    }
+    button.disabled = true;
+    button.textContent = "בודק…";
+    $("gateError").textContent = "";
+    state.token = token;
+    try {
+      const latest = await fetchLatest();
+      state.data = latest.data;
+      state.sha = latest.sha;
+      state.lastLoad = Date.now();
+      store.set(TOKEN_KEY, token);
+      input.value = "";
+      showWorkspace();
+      setSync("מחובר ל-GitHub");
+      render();
+    } catch (err) {
+      state.token = null;
+      $("gateError").textContent = errorText(err);
+    } finally {
+      button.disabled = false;
+      button.textContent = "פתיחת הטבלה";
+    }
+  });
+
+  $("signout").addEventListener("click", () => {
+    if ((state.pending.length || state.saving) && !confirm("יש שינויים שעוד לא נשמרו. לצאת בכל זאת?")) return;
+    lockOut("יצאת, והמפתח נמחק מהדפדפן הזה.");
+  });
+
+  // ---- Rendering ----
+
+  const groupOf = (row, sheet) => row[sheet.group] || NO_GROUP;
+  const sortedRows = (name) => ((state.data && state.data[name]) || []).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+  function matches(row, sheet) {
+    if (state.tab !== "info") {
+      if (state.who && row.who !== state.who) return false;
+      if (state.status && row.status !== state.status) return false;
+    }
+    if (!state.q) return true;
+    const needle = state.q.toLowerCase();
+    return [sheet.group, ...sheet.cols.map((c) => c.key)].some((k) => String(row[k] ?? "").toLowerCase().includes(needle));
+  }
+
+  function renderFilters() {
+    const onInfo = state.tab === "info";
+    const chip = (label, value, current, attr) =>
+      `<button class="chip" type="button" data-${attr}="${esc(value)}" aria-pressed="${current === value}">${esc(label)}</button>`;
+    $("whoFilter").innerHTML = chip("כולם", "", state.who, "who") + WHO.map((w) => chip(w, w, state.who, "who")).join("");
+    $("statusFilter").innerHTML = chip("כל הסטטוסים", "", state.status, "status") + STATUS.map((s) => chip(s, s, state.status, "status")).join("");
+    $("whoFilter").hidden = onInfo;
+    $("statusFilter").hidden = onInfo;
+    document.querySelectorAll(".tabs [data-tab]").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === state.tab)));
+  }
+
+  function renderPeople() {
+    const rows = state.data && state.data[state.tab];
+    if (state.tab === "info" || !rows) {
+      $("people").innerHTML = "";
+      return;
+    }
+    $("people").innerHTML = WHO.map((who) => {
+      const mine = rows.filter((r) => r.who === who);
+      if (!mine.length) return "";
+      const done = mine.filter((r) => r.status === "בוצע").length;
+      const wip = mine.filter((r) => r.status === "בתהליך").length;
+      const pct = (n) => ((100 * n) / mine.length).toFixed(1) + "%";
+      return `<div class="person">
+        <div class="person-head"><span class="person-name">${esc(who)}</span><span class="person-count">${done} מתוך ${mine.length} בוצעו</span></div>
+        <div class="meter" role="img" aria-label="${esc(who)}: ${done} בוצעו ו-${wip} בתהליך, מתוך ${mine.length}">
+          <span class="done" style="width:${pct(done)}"></span><span class="wip" style="width:${pct(wip)}"></span>
+        </div>
+      </div>`;
+    }).join("");
+  }
+
+  function cellHtml(col, row) {
+    const value = row[col.key] ?? "";
+    const common = `data-field="${col.key}" aria-label="${esc(col.label)}"`;
+    if (col.kind === "who" || col.kind === "status") {
+      const options = col.kind === "who" ? WHO : STATUS;
+      const list = !value || options.includes(value) ? options : [value, ...options];
+      const cls = col.kind === "who" ? "who" : STATUS_CLASS[value] || "todo";
+      return `<select class="pill ${cls}" ${common}>${list.map((o) => `<option${o === value ? " selected" : ""}>${esc(o)}</option>`).join("")}</select>`;
+    }
+    if (col.kind === "area") return `<textarea class="cell" rows="1" ${common}>${esc(value)}</textarea>`;
+    const mono = col.kind === "mono";
+    return `<input class="cell${mono ? " mono" : ""}" type="text" value="${esc(value)}" ${common}${mono ? ' dir="ltr" spellcheck="false"' : ""}>`;
+  }
+
+  function render() {
+    state.renderPending = false;
+    renderFilters();
+    renderPeople();
+    if (!state.data) return;
+    const sheet = SHEETS[state.tab];
+    const rows = sortedRows(state.tab);
+    const numbers = new Map(rows.map((r, i) => [r.id, i + 1]));
+    const visible = rows.filter((r) => matches(r, sheet));
+    const filtered = visible.length !== rows.length;
+    $("count").textContent = filtered ? `${visible.length} מתוך ${rows.length} שורות` : `${rows.length} שורות`;
+
+    if (!visible.length) {
+      view.innerHTML = rows.length
+        ? `<p class="notice">אין שורות שמתאימות לסינון. אפשר לבחור "כולם" או לנקות את החיפוש.</p>`
+        : `<p class="notice">הגיליון הזה ריק.</p>`;
+      state.renderedTab = state.tab;
+      return;
+    }
+
+    const groups = [];
+    for (const r of visible) {
+      const name = groupOf(r, sheet);
+      let g = groups.find((x) => x.name === name);
+      if (!g) groups.push((g = { name, rows: [] }));
+      g.rows.push(r);
+    }
+    const span = sheet.cols.length + 2;
+    const withStatus = state.tab !== "info";
+    const head = `<thead><tr><th class="num" scope="col">#</th>${sheet.cols
+      .map((c) => `<th scope="col" class="${c.cls}">${esc(c.label)}</th>`)
+      .join("")}<th class="w-act" scope="col"><span class="sr">פעולות</span></th></tr></thead>`;
+    const body = groups.map((g) => {
+      const done = g.rows.filter((r) => r.status === "בוצע").length;
+      const count = withStatus ? `<span class="group-count">${done}/${g.rows.length}</span>` : "";
+      const rowsHtml = g.rows.map((r) =>
+        `<tr class="row" data-id="${esc(r.id)}"><td class="num">${numbers.get(r.id)}</td>${sheet.cols
+          .map((c) => `<td class="${c.cls}">${cellHtml(c, r)}</td>`)
+          .join("")}<td class="w-act"><button class="del" type="button" data-del="${esc(r.id)}">מחיקה</button></td></tr>`
+      ).join("");
+      const add = filtered ? "" : `<tr class="add"><td colspan="${span}"><button class="add-btn" type="button" data-add="${esc(g.name)}">+ הוספת שורה</button></td></tr>`;
+      return `<tbody><tr class="group"><th colspan="${span}" scope="colgroup"><div class="group-line"><span>${esc(g.name)}</span>${count}</div></th></tr>${rowsHtml}${add}</tbody>`;
+    }).join("");
+
+    const oldWrap = view.querySelector(".table-wrap");
+    const keepScroll = oldWrap && state.renderedTab === state.tab ? [oldWrap.scrollTop, oldWrap.scrollLeft] : null;
+    view.innerHTML = `<div class="table-wrap"><table class="grid" data-sheet="${state.tab}">${head}${body}</table></div>`;
+    const wrap = view.querySelector(".table-wrap");
+    if (keepScroll) [wrap.scrollTop, wrap.scrollLeft] = keepScroll;
+    state.renderedTab = state.tab;
+    autosizeAll();
+
+    if (state.focusId) {
+      const first = view.querySelector(`tr[data-id="${CSS.escape(state.focusId)}"] .cell`);
+      if (first) first.focus();
+      state.focusId = null;
+    }
+  }
+
+  function autosize(area) {
+    area.style.height = "auto";
+    area.style.height = area.scrollHeight + 2 + "px";
+  }
+
+  function autosizeAll() {
+    const areas = [...view.querySelectorAll("textarea.cell")];
+    areas.forEach((a) => { a.style.height = "auto"; });
+    const heights = areas.map((a) => a.scrollHeight + 2);
+    areas.forEach((a, i) => { a.style.height = heights[i] + "px"; });
+  }
+
+  // A redraw that lands while someone is typing waits, so it never wipes the field being edited
+  // or swallows the click that ended the edit.
+  let pointerDown = false;
+  const editing = () => {
+    const el = document.activeElement;
+    return !!el && view.contains(el) && el.matches(".cell, .pill");
+  };
+  function scheduleRender() {
+    if (editing() || pointerDown) state.renderPending = true;
+    else render();
+  }
+  function flushRender() {
+    if (state.renderPending && !pointerDown && !editing()) render();
+  }
+  document.addEventListener("pointerdown", () => { pointerDown = true; }, true);
+  document.addEventListener("pointerup", () => { pointerDown = false; setTimeout(flushRender, 0); }, true);
+  document.addEventListener("pointercancel", () => { pointerDown = false; setTimeout(flushRender, 0); }, true);
+  view.addEventListener("focusout", () => setTimeout(flushRender, 0));
+
+  // ---- Editing ----
+
+  function removeRow(button) {
+    if (!button.hasAttribute("data-armed")) {
+      button.setAttribute("data-armed", "");
+      button.textContent = "למחוק?";
+      setTimeout(() => {
+        if (button.isConnected && button.hasAttribute("data-armed")) {
+          button.removeAttribute("data-armed");
+          button.textContent = "מחיקה";
+        }
+      }, 3000);
+      return;
+    }
+    queue({ type: "delete", sheet: state.renderedTab, id: button.dataset.del });
+  }
+
+  function addRow(groupName) {
+    const sheetName = state.renderedTab;
+    const sheet = SHEETS[sheetName];
+    const rows = sortedRows(sheetName);
+    const inGroup = rows.filter((r) => groupOf(r, sheet) === groupName);
+    const last = inGroup[inGroup.length - 1];
+    const next = last ? rows[rows.indexOf(last) + 1] : undefined;
+    const base = last ? last.order ?? 0 : 0;
+    const order = next ? (base + (next.order ?? base + 1)) / 2 : base + 1;
+    const id = "r" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    state.focusId = id;
+    queue({ type: "add", sheet: sheetName, row: { id, order, ...sheet.blank, [sheet.group]: groupName === NO_GROUP ? "" : groupName } });
+  }
+
+  document.querySelector(".tabs").addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-tab]");
+    if (!btn || btn.dataset.tab === state.tab) return;
+    state.tab = btn.dataset.tab;
+    store.set(TAB_KEY, state.tab);
+    render();
+  });
+
+  function bindChips(containerId, key) {
+    $(containerId).addEventListener("click", (e) => {
+      const chip = e.target.closest(`[data-${key}]`);
+      if (!chip) return;
+      state[key] = chip.dataset[key];
+      render();
+      const again = $(containerId).querySelector(`[data-${key}="${CSS.escape(state[key])}"]`);
+      if (again) again.focus();
+    });
+  }
+  bindChips("whoFilter", "who");
+  bindChips("statusFilter", "status");
+
+  $("q").addEventListener("input", (e) => {
+    state.q = e.target.value.trim();
+    render();
+  });
+
+  view.addEventListener("change", (e) => {
+    const el = e.target.closest("[data-field]");
+    const tr = el && el.closest("tr[data-id]");
+    if (!tr || !state.data) return;
+    if (el.dataset.field === "status") el.className = "pill " + (STATUS_CLASS[el.value] || "todo");
+    queue({ type: "set", sheet: state.renderedTab, id: tr.dataset.id, field: el.dataset.field, value: el.value });
+  });
+
+  view.addEventListener("input", (e) => {
+    if (e.target.matches("textarea.cell")) autosize(e.target);
+  });
+
+  view.addEventListener("keydown", (e) => {
+    const t = e.target;
+    if (!t.matches(".cell")) return;
+    if (e.key === "Enter" && t.tagName === "INPUT") {
+      e.preventDefault();
+      t.blur();
+    } else if (e.key === "Escape") {
+      t.value = t.defaultValue;
+      if (t.tagName === "TEXTAREA") autosize(t);
+      t.blur();
+    }
+  });
+
+  view.addEventListener("click", (e) => {
+    if (e.target.closest("[data-retry]")) return open();
+    const del = e.target.closest("[data-del]");
+    if (del) return removeRow(del);
+    const add = e.target.closest("[data-add]");
+    if (add) addRow(add.dataset.add);
+  });
+
+  let resizeFrame = 0;
+  window.addEventListener("resize", () => {
+    cancelAnimationFrame(resizeFrame);
+    resizeFrame = requestAnimationFrame(autosizeAll);
+  });
+  if (document.fonts) document.fonts.ready.then(autosizeAll);
+
+  setInterval(refresh, 45000);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") flush();
+    else if (Date.now() - state.lastLoad > 10000) refresh();
+  });
+  window.addEventListener("beforeunload", (e) => {
+    if (state.pending.length || state.saving) {
+      e.preventDefault();
+      e.returnValue = "";
+    }
+  });
+
+  open();
+})();
+</script>
+</body>
+</html>
