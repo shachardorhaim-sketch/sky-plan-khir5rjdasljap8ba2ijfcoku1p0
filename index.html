@@ -184,6 +184,7 @@
   .gate-error { min-height: 1.45em; color: var(--danger) !important; }
   .gate details { color: var(--ink-soft); }
   .gate summary { cursor: pointer; color: var(--ink); font-weight: 500; }
+  .gate a { color: var(--lapis); font-weight: 600; }
   .gate ol { display: grid; gap: 6px; margin: 10px 0 0; padding-inline-start: 22px; }
   .gate code {
     font-family: "IBM Plex Mono", Consolas, monospace;
@@ -420,12 +421,11 @@
       <button class="btn" id="gateButton" type="submit">פתיחת הטבלה</button>
     </form>
     <p class="gate-error" id="gateError" role="alert"></p>
-    <details>
+    <details open>
       <summary>איך יוצרים מפתח</summary>
       <ol>
-        <li>נכנסים ל-<code>github.com/settings/personal-access-tokens/new</code></li>
+        <li>פותחים את <a href="https://github.com/settings/personal-access-tokens/new?name=sky-plan&amp;description=Work%20plan%20site&amp;expires_in=366&amp;contents=write" target="_blank" rel="noopener">הטופס המוכן ב-GitHub</a>. השם וההרשאות כבר ממולאים</li>
         <li>ב-Repository access בוחרים <code>Only select repositories</code> ואז <code>sky-plan-data</code></li>
-        <li>ב-Permissions מוסיפים <code>Contents</code> ובוחרים <code>Read and write</code></li>
         <li>לוחצים <code>Generate token</code>, מעתיקים את המפתח ומדביקים אותו כאן</li>
       </ol>
     </details>
